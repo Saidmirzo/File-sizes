@@ -1,7 +1,6 @@
 import 'dart:io';
-import 'dart:math';
+
 import 'package:filesize/filesize.dart';
-import 'package:test/test.dart';
 
 class FileSize {
   start() async {
@@ -10,55 +9,27 @@ class FileSize {
     String filePath = stdin.readLineSync()!;
     printFolders(filePath);
     // printFolders("D:/Saidmirzo/dart/Algoritms");
-    // await Future.delayed(Duration(seconds: 5));
+   
     // print(listMap);
   }
 
-  Future<int> getFolderSize() async {
-    int sizeFolder = 0;
-    Map<String, String> listMap =
-        {}; //Shu map ichida folder ichiudagi barcha file lar ro'yxati va o'lchami bor
-//----------------------------------------------------------------------------------
-    getFolderContents(String path) async {
-      final dir = Directory(path);
-      final List<FileSystemEntity> entities = await dir.list().toList();
-      entities.forEach((element) {
-        if (element is File) {
-          listMap[element.toString()] = element.lengthSync().toString();
-          sizeFolder += element.lengthSync();
-          // print(element.lengthSync());
-        } else {
-          if (element is Directory) {
-            // print(element.toString().exchange());
-
-            getFolderContents(element.toString().exchange());
-          }
-        }
-      });
-    }
-
-    return sizeFolder;
-  }
-
-  void printFolders(String path) {
+  void printFolders(String path) async{
     final dir = Directory(path);
     final List<FileSystemEntity> entities = dir.listSync().toList();
     print(path.replaceAll("\\", "/").split("/").last);
-    List<FileSystemEntity> file = [];
     int i = 1;
-
+ 
     entities.forEach((element) {
-      file.add(element);
-      
+     
       if (element is File) {
         print("     |______");
-        
+
         print(
-            "${i++}📄  |      ${element.toString().exchange().split("/").last}");
+            "${i++}📄  |      ${element.toString().exchange().split("/").last}  ${filesize(element.lengthSync())}  ");
       } else if (element is Directory) {
         print("     |______");
         print(
-            "${i++}📂  |      ${element.toString().exchange().split("/").last}");
+            "${i++}📂  |      ${element.toString().exchange().split("/").last}     ");
       }
     });
     print("Tartib raqamini kiriting(qaytish uchun '0'): ");
@@ -73,10 +44,9 @@ class FileSize {
       } else {
         if (entities[tanlov - 1] is Directory) {
           printFolders(entities[tanlov - 1].toString().exchange());
-        } else if(entities[tanlov - 1] is File){
+        } else if (entities[tanlov - 1] is File) {
           print(entities[tanlov - 1]);
-          print(
-              "Bu tanlovda folder emas \nDavom etaylikmi(Ha-1)?");
+          print("Bu tanlovda folder emas \nDavom etaylikmi(Ha-1)?");
           if (int.parse(stdin.readLineSync()!) == 1) {
             printFolders(path);
           } else {
@@ -106,11 +76,7 @@ extension Exchange on String {
     return natija;
   }
 }
-// List sortList(List<FileSystemEntity> list){
-//     Map<FileSystemEntity, int> entities = {};
-//     list.forEach((element) {
-//       entities[element]=element.l
-//     });
-//   return [];
-// }
+
+
+
 
